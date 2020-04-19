@@ -1,0 +1,19 @@
+@keyframes new-fade {
+   0% {background: white; color: black;}
+   100% {background: none; color: white;}
+}
+
+.highlight {
+   -webkit-animation: new-fade 2s ease-in 1;
+   animation: new-fade 2s ease-in 1;
+}
+
+body {
+   color: white;
+   background: black;
+}
+
+.choice:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
