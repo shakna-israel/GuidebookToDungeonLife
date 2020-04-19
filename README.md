@@ -16,6 +16,12 @@ You are a researcher, who got it into their head that it might be a good idea to
 
 ---
 
+## Status
+
+I started working on this a few hours ago. Adjust your expectations low, and then adjust them lower again.
+
+---
+
 ## Lua!? I thought this was for the browser!
 
 Is is.
