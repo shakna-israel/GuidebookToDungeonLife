@@ -12,7 +12,8 @@ local function sleep(delay)
     coroutine.yield()
 end
 
-local function Object(t)
+local Object
+Object = function(t)
   local o = js.new(js.global.Object)
   for k, v in pairs(t) do
     assert(type(k) == "string" or js.typeof(k) == "symbol", "JavaScript only has string and symbol keys")
@@ -149,8 +150,10 @@ local new_player = function(state)
     x.classList:add("highlight")
 
     x:addEventListener("click", function()
+      -- TODO: state.world doesn't seem to be saved by Object(t)
       state = generate_world(state)
       state.intro_complete = true
+      -- TODO: Get user name and store it
       tick(state)
     end)
     el:appendChild(x)

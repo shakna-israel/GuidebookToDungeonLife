@@ -21,3 +21,12 @@ body {
 #logout {
    margin-bottom: 4em;
 }
+
+input, button {
+   display: block;
+   color: white;
+   background-color: black;
+   font-size: 1em;
+   width: 80%;
+   margin: 1em auto;
+}
