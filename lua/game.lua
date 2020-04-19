@@ -27,6 +27,19 @@ local new_player = function(state)
 
     local x = document:createElement("input")
     x.classList:add("highlight")
+
+    if state.idiot and state.idiot > 0 then
+      x.value = "X"
+    end
+
+    if state.etiquette and state.etiquette > 0 then
+      x.value = "Lord Valance Ostentatious VII"
+    end
+
+    if state.drunk and state.drunk > 0 then
+      x.value = "I̴͕̔̂̓̀̓̌͐̋͆̆͒̚̚͠A̵͙̩̍́̏͘m̴͉͉̦̹̲̰̬̭̹̼͔̫͚͍̘̎͋̆̈́̕D̷̢͇̫͉̫̗̤͓̦̮̝̣̟͉̍͛́̆͂͜͝͝r̷̻̪̻͆̅̿̏̂̀̓͊̿̍̚͘ù̶͖͕̤̰͔̤̦̩͙̬́̋͌̌̌̌͆ǹ̷̡̰̞͍̩̩͇̙̉̆̚k̵̡̜̳̪͉̳͖͙̞̝̳̟͉͖̎̿̐̋̋͛̓͛͜"
+    end
+
     el:appendChild(x)
     x:scrollIntoView()
     sleep(2)
