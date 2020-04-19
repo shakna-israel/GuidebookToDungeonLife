@@ -12,6 +12,59 @@ local function sleep(delay)
     coroutine.yield()
 end
 
+local function Object(t)
+  local o = js.new(js.global.Object)
+  for k, v in pairs(t) do
+    assert(type(k) == "string" or js.typeof(k) == "symbol", "JavaScript only has string and symbol keys")
+    o[k] = v
+  end
+  return o
+end
+
+local load_game = function()
+  local r = {}
+  
+  local x = window.localStorage:getItem("game")
+  if x then
+    local o = window.JSON:parse(x)
+
+    for k, v in pairs(o) do
+      r[k] = v
+    end
+
+  end
+
+  return r
+end
+
+local save_game = function(state)
+  local s = window.JSON:stringify(Object(state))
+  window.localStorage:setItem("game", s)
+  print("Saved!")
+end
+
+local tick
+tick = function(state)
+
+  -- TODO: print descriptions of location
+
+  -- TODO: print action options
+
+  window:setTimeout(function()
+    state = tick(state)
+  end, 1000)
+
+  -- Save the state
+  save_game(state)
+
+  return state
+end
+
+local generate_world = function(state)
+  -- TODO: generate world rooms
+  return state
+end
+
 local new_player = function(state)
   local el = document:getElementById("gamecontent")
   el.textContent = ''
@@ -47,10 +100,15 @@ local new_player = function(state)
     local x = document:createElement("button")
     x.textContent = 'Confirm'
     x.classList:add("highlight")
-    -- TODO: link to save button
+
+    x:addEventListener("click", function()
+      state = generate_world(state)
+      state.intro_complete = true
+      tick(state)
+    end)
     el:appendChild(x)
     x:scrollIntoView()
-    sleep(2)    
+    sleep(2)
   end)()
 end
 
@@ -286,24 +344,16 @@ local intro = function(state)
   return state
 end
 
-local load_game = function()
-  local r = {}
-  -- TODO: localStorage
-  return r
-end
-
-local save_game = function(state)
-  -- TODO: localStorage
-end
-
 local main = function()
   local state = load_game()
 
-  if state.intro_complete ~= "true" then
+  if state.intro_complete ~= true then
     state = intro(state)
+  else
+    tick(state)
   end
 
-  save_game(state)
 end
 
+--load_game()
 main()
