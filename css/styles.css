@@ -17,3 +17,7 @@ body {
 	cursor: pointer;
 	text-decoration: underline;
 }
+
+#logout {
+   margin-bottom: 4em;
+}

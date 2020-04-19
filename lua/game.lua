@@ -25,11 +25,14 @@ local load_game = function()
   local r = {}
   
   local x = window.localStorage:getItem("game")
-  if x then
+  if x ~= js.null then
     local o = window.JSON:parse(x)
+    if o then
 
-    for k, v in pairs(o) do
-      r[k] = v
+      for k, v in pairs(o) do
+        r[k] = v
+      end
+
     end
 
   end
@@ -43,8 +46,14 @@ local save_game = function(state)
   print("Saved!")
 end
 
+local generate_world
+
 local tick
 tick = function(state)
+
+  if not state.world then
+    state = generate_world(state)
+  end
 
   -- TODO: print descriptions of location
 
@@ -60,8 +69,46 @@ tick = function(state)
   return state
 end
 
-local generate_world = function(state)
-  -- TODO: generate world rooms
+local generate_room = function()
+  local r = {}
+
+  r['name'] = '?' -- TODO: Randomise
+
+  r['present'] = {} -- TODO: Random 1-2 NPCs (npcs can give factoids)
+
+  r['market'] = {} -- TODO: Low chance of market stall owner
+
+  r['description'] = '?' -- TODO: Randomise
+
+  r['locations'] = {}
+
+  return r
+end
+
+generate_world = function(state)
+  -- generate world rooms
+  state.world = {}
+
+  state.world[1] = generate_room()
+  state.world[1].name = 'Reception'
+  state.world[1].description = 'A somewhat rough looking room, filled with rougher looking people uninterested in talking to you.'
+  state.world[1].present[#state.world[1].present + 1] = 'Mr. Receptionist'
+  state.world[1].locations[#state.world[1].locations + 1] = 2
+
+  for i=2, 100 do
+    -- Generate a single room
+    state.world[i] = generate_room()
+    -- Link it to the previous room
+    state.world[i].locations[#state.world[i].locations + 1] = i-1
+
+    -- Generate adjoining rooms
+    for i2=1, 10 do
+      state.world[i*2 + i2] = generate_room()
+      state.world[i].locations[#state.world[i].locations + 1] = i*2 + i2
+    end
+
+  end
+
   return state
 end
 
@@ -345,6 +392,18 @@ local intro = function(state)
 end
 
 local main = function()
+  local el = document:getElementById("logout")
+  el:addEventListener("click", function()
+    if window:confirm("DESTROY YOUR SAVEFILE??") then
+      tick = function() end
+      window.localStorage:clear()
+      window.location:reload()
+    end
+  end)
+
+  local el = document:getElementById("gamecontent")
+  el.textContent = ''
+
   local state = load_game()
 
   if state.intro_complete ~= true then
@@ -355,5 +414,4 @@ local main = function()
 
 end
 
---load_game()
 main()
